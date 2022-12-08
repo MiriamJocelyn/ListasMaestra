@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@Scripts.Render("~/bundles/ListaM")
+@*<script type="text/javascript" src="https://unpkg.com/jspdf-autotable"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>*@
+<div style=" margin-top:8%!important" id="Busquedad">
+  <label hidden="hidden" id="lblNivel"></label>
+  <label hidden="hidden" id="lblArea"></label>
+
+  <div class="row">
+    <div class="col-lg-2">
+      <label>¿Mostrar Inhabilitados?</label>
+    </div>
+    <div class="col-lg-1">
+      <select name="select" class="form-control" id="cbmHabilitado">
+        <option value="Si" selected>Sí</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+    <div class="col-lg-1">
+      <label>Nivel</label>
+    </div>
+    <div class="col-lg-1">
+      <select name="select" class="form-control" id="cmbNivel">
+
+      </select>
+    </div>
+    <div class="col-lg-1">
+      <label>Área</label>
+    </div>
+    <div class="col-lg-2">
+      <select name="select" class="form-control" id="cmbArea">
+
+      </select>
+    </div>
+    <div class="col-lg-1">
+      <button class="btn btn-success" id="btnBuscar">Buscar</button>
+    </div>
+    <div class="col-lg-1">
+      <button class="btn btn-success" id="btnPdfTodos"><img src="~/Resources/icons8-pdf-94.png" style="width:20px!important"/>Todos</button>
+    </div>
+    <div class="col-lg-1">
+      <button class="btn btn-success" id="btnPdfSeleccionados"><img src="~/Resources/icons8-pdf-94.png" style="width:20px!important" />Seleccionados</button>
+    </div>
+  </div>
+</div>
+
+<div id="contenido" style="margin-top:2%!important">
+  <table id="contenidoTabla">
+    <thead>
+      <tr class="table-info">
+        <th colspan="17">Lista Maestra de Documentos</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Nivel</th>
+        <th>Área</th>
+        <th>N.</th>
+        <th>Código</th>
+        <th>Originador</th>
+        <th>Nombre del documento</th>
+        <th>Fecha de Eleboración Inicial "Rev.0</th>
+        <th>Revisión Actual</th>
+        <th>Elaboración</th>
+        <th>Revisión y Aprobación</th>
+        <th>Aprobado por todos los involucrados</th>
+        <th>Difusión</th>
+        <th>Fecha de la última revisión</th>
+        <th>Observaciones</th>
+        <th>Estatus</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="tbodyPrincipal"></tbody>
+  </table>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Lista Maestra de Documentos - Edición</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label id="lblCodigo" hidden="hidden"></label>
+        <div class="row" >
+          <div class="col-md-6">
+            <label>Elaboración</label>
+          </div>
+          <div class="col-md-3">
+            <select name="select" class="form-control" id="cmbElab">
+              <option value="R">R</option>
+              <option value="P">P</option>
+              <option value="OK">OK</option>
+              <option value="NA">NA</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:3%!important">
+          <div class="col-md-6">
+            <label>Revisión y Aprobación</label>
+          </div>
+          <div class="col-md-3">
+            <select name="select" class="form-control" id="cmbRevApro">
+              <option value="R">R</option>
+              <option value="P">P</option>
+              <option value="OK">OK</option>
+              <option value="NA">NA</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:3%!important">
+          <div class="col-md-6">
+            <label>Aprobado por todos los involucrados</label>
+          </div>
+          <div class="col-md-3">
+            <select name="select" class="form-control" id="cmbApro">
+              <option value="R">R</option>
+              <option value="P">P</option>
+              <option value="OK">OK</option>
+              <option value="NA">NA</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:3%!important">
+          <div class="col-md-6">
+            <label>Difusión</label>
+          </div>
+          <div class="col-md-3">
+            <select name="select" class="form-control" id="cmbDif">
+              <option value="R">R</option>
+              <option value="P">P</option>
+              <option value="OK">OK</option>
+              <option value="NA">NA</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="guardar()" data-dismiss="modal">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>

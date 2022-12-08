@@ -1,7 +1,34 @@
 ﻿$(document).ready(function () {
+    //$('#contenidoTabla').DataTable({
+    //    dom: 'Bfrtip',
+    //    buttons: [
+    //       'pdf'
+    //    ]
+    //});
+    //html2canvas($('#contenidoTabla'), {
+    //    onrendered: function (canvas) {
+    //        var data = canvas.toDataURL();
+    //        var docDefinition = {
+    //            content: [{
+    //                image: data,
+    //                width: 500
+    //            }]
+    //        };
+    //        pdfMake.createPdf(docDefinition).download("Table.pdf");
+    //    }
+    //});
+    //var myDocument = new jsPDF();
+    //var specialElementHandlers = {
+    //    "#contenidoTabla": function (element, rendrer) {
+    //        return true;
+    //    }
+    //};
+    //myDocument.fromHTML($("#contenidoTabla").html(), 15, 15, {
+    //    "width": 170,
+    //    "elementHandlers": specialElementHandlers
+    //});
 
-    //prueba()
-
+    //myDocument.save("File.pdf");
     jQuery.ajax({
         async: true,
         url: "http://localhost:57199/ListaM/ConsultaNivel",
@@ -87,30 +114,46 @@ function llenadoComboA(data) {
 }
 
 function llenadoGrid(data) {
-    var htmlTbody=""
+    $("#tbodyPrincipal").empty()
+    var htmlTbody = ""
     for (i = 0; i < data.length; i++) {
         htmlTbody += '<tr>'
         htmlTbody += '<td><input type="checkbox" id="' + data[i].nivel + data[i].area + data[i].Doc + '" onclick="check()"/></td>'
-        htmlTbody += '<td>' + data[i].nivel + '</td>'
+        if (data[i].nivel == 0)
+            htmlTbody += '<td></td>'
+        else
+            htmlTbody += '<td>' + data[i].nivel + '</td>'
+       
         htmlTbody += '<td>' + data[i].area + '</td>'
         htmlTbody += '<td>' + data[i].Doc + '</td>'
         htmlTbody += '<td>' + data[i].Codigo + '</td>'
         htmlTbody += '<td>' + data[i].Originador + '</td>'
         htmlTbody += '<td>' + data[i].NomDocumento + '</td>'
-        htmlTbody += '<td>' + data[i].FechaElaboracion + '</td>'
-        htmlTbody += '<td>' + data[i].RevisionActual + '</td>'
+        htmlTbody += '<td>' + fecha(data[i].FechaElaboracion) + '</td>'
+        
+        if (data[i].RevisionActual = "-1")
+            htmlTbody += '<td></td>'
+        else
+            htmlTbody += '<td>' + data[i].RevisionActual + '</td>'
         htmlTbody += '<td>' + data[i].Elaboracion + '</td>'
         htmlTbody += '<td>' + data[i].RevisionAprobacion + '</td>'
         htmlTbody += '<td>' + data[i].AprobadoInvolucrados + '</td>'
         htmlTbody += '<td>' + data[i].Difusion + '</td>'
-        htmlTbody += '<td>' + data[i].FechaUltimaRevision + '</td>'
+        htmlTbody += '<td>' + fecha(data[i].FechaUltimaRevision) + '</td>'
         htmlTbody += '<td>' + data[i].Observaciones + '</td>'
         htmlTbody += '<td>' + data[i].estatus + '</td>'
+        htmlTbody += '<td><button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick="ver(\'' + data[i].Elaboracion + '\',\'' + data[i].RevisionAprobacion + '\',\'' + data[i].AprobadoInvolucrados + '\',\'' + data[i].Difusion + '\',\'' + data[i].Codigo + '\')"> Ver</button></td>'
         htmlTbody += '</tr>'
 
     }
 
     $("#tbodyPrincipal").append(htmlTbody)
+}
+function fecha(dataFecha) {
+    if (dataFecha.substring(0, 10))
+        return '';
+    else
+      return  dataFecha.substring(0, 10)
 }
 
 function check() {
@@ -125,50 +168,40 @@ function check() {
     //}
 }
 
-
-
-function prueba() {
-    var htmlTbody = '<tr>'
-    //var data = obtData()
-    //alert(data.length)
-
-    htmlTbody += '<td><input type="checkbox" id="2LP01" onclick="check()"/></td>'
-    htmlTbody += '<td>2</td>'
-    htmlTbody += '<td>LP</td>'
-    htmlTbody += '<td>01</td>'
-    htmlTbody += '<td>2-LP-01</td>'
-    htmlTbody += '<td>Marisela Domínguez</td>'
-    htmlTbody += '<td>Procedimiento de Inspeccion Recibo Pelota</td>'
-    htmlTbody += '<td>09-11-18</td>'
-    htmlTbody += '<td>0</td>'
-    htmlTbody += '<td>ok</td>'
-    htmlTbody += '<td>ok</td>'
-    htmlTbody += '<td>ok</td>'
-    htmlTbody += '<td>ok</td>'
-    htmlTbody += '<td>10-ene-18</td>'
-    htmlTbody += '<td></td>'
-    htmlTbody += '<td>Habilitado</td>'
-    htmlTbody += '</tr>'
-
-    htmlTbody += '<tr>'
-    htmlTbody += '<td><input class="check" type="checkbox" id="2LP02"/></td>'
-    htmlTbody += '<td>2</td>'
-    htmlTbody += '<td>LP</td>'
-    htmlTbody += '<td>02</td>'
-    htmlTbody += '<td>2-LP-02</td>'
-    htmlTbody += '<td>Marisela Domínguez</td>'
-    htmlTbody += '<td>Procedimiento de Formulacion de plastico de pelota</td>'
-    htmlTbody += '<td>14-12-18</td>'
-    htmlTbody += '<td>0</td>'
-    htmlTbody += '<td>P</td>'
-    htmlTbody += '<td>P</td>'
-    htmlTbody += '<td>P</td>'
-    htmlTbody += '<td>P</td>'
-    htmlTbody += '<td>10-ene-18</td>'
-    htmlTbody += '<td></td>'
-    htmlTbody += '<td>Habilitado</td>'
-    htmlTbody += '</tr>'
-
-    $("#tbodyPrincipal").append(htmlTbody)
+function ver(elaboracion,revAprobado,aprobado,difusion,codigo) {
+    console.log(elaboracion)
+    $("#lblCodigo").text(codigo)
+    $("#cmbElab").val(elaboracion)
+    $("#cmbRevApro").val(revAprobado)
+    $("#cmbApro").val(aprobado)
+    $("#cmbDif").val(difusion)
+    //$("#lblPrueba").text(data.area)
 }
+function guardar() {
+    var elaboracion = $("#cmbElab").val();
+    var revAprobado = $("#cmbRevApro").val()
+    var aprobado = $("#cmbApro").val()
+    var difusion = $("#cmbDif").val()
+    var codigo = $("#lblCodigo").text()
+    var object = { codigo: codigo, revision: revAprobado, aprobado: aprobado,elaboracion:elaboracion,difusion:difusion}
+    jQuery.ajax({
+        async: true,
+        url: "http://localhost:57199/ListaM/EdicionLista",
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(object),
+        success: function (data) {
+            console.log(data)
+            $('#btnBuscar').trigger('click');
+            alert(data[0].Descripcion)
+        },
+        error: function (data) {
+            console.log(data)
+            alert(data)
+        }
+    });
+}
+
+
 

@@ -63,6 +63,16 @@ namespace ListaMaestra.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_pdf_94 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_pdf_94", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap logo2Artboard_1Glasfirma {
             get {
                 object obj = ResourceManager.GetObject("logo2Artboard_1Glasfirma", resourceCulture);
